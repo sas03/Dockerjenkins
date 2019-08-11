@@ -1,0 +1,12 @@
+Pour télécharger jenkins
+- docker pull jenkins/jenkins
+
+- docker-machine ls
+
+Pour exécuter docker après téléchargement du docker toolbox
+
+- docker run -d -P seqvence/static-site
+- docker ps
+
+Pour un résultat web
+192.168.99.100:32769

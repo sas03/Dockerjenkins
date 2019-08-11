@@ -1,0 +1,49 @@
+version: '2'
+services:
+  jenkins:
+    image: 'jenkins/jenkins:lts'
+    labels:
+      kompose.service.type: nodeport
+    ports:
+      - '8080:8080'
+      - '50000:50000'
+    volumes:
+      - 'jenkins_data:/jenkins_config'
+
+  web:
+    image: nginx:1.10
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    volumes_from:
+      - php
+    ports:
+      - 80:80
+    links:
+      - phpunittest
+    depends_on:
+      - phpunittest
+
+  phpunittest:
+    build:
+      context: ./samplephpwebsite-1
+    volumes:
+      - ./:/opt/project
+    ports: 
+      - 8258:80
+    links:
+      - php
+    depends_on:
+      - php
+
+  php:
+    build: .
+    volumes:
+      - ./samplephpwebsite-1:/var/www/samplephpwebsite-1
+
+volumes:
+  jenkins_data:
+    driver: local
+
+  application:
+    image: localhost:8080/samplephpwebsite-1
+    restart: always
